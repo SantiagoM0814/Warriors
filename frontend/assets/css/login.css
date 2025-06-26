@@ -1,0 +1,84 @@
+body, html {
+  height: 100%;
+  margin: 0;
+  font-family: cursive;
+  background-color: #121212; /* Fondo oscuro uniforme */
+}
+
+.login-container {
+  background: linear-gradient(to bottom, #121212, #1e1e1e); /* Degradado sutil */
+  min-height: 90vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+}
+
+.login-box {
+  background: rgba(20, 20, 30, 0.95);
+  border: 2px solid #f1c40f; /* Dorado */
+  border-radius: 15px;
+  padding: 2rem;
+  color: #f5f5f5;
+  width: 100%;
+  max-width: 400px;
+  box-shadow: 0 0 25px rgba(241, 196, 15, 0.5); /* Brillo dorado suave */
+}
+
+.login-box h4 {
+  text-align: center;
+  color: #f1c40f;
+  margin-bottom: 1.5rem;
+}
+
+.form-label {
+  color: #ddd;
+}
+
+.form-control {
+  background-color: #2a2a3a;
+  border: 1px solid #444;
+  color: #fff;
+}
+
+.form-control::placeholder {
+  color: #aaa;
+}
+
+.form-control:focus {
+  border-color: #f1c40f;
+  box-shadow: 0 0 5px rgba(241, 196, 15, 0.4);
+  background-color: #2a2a3a;
+  color: #fff;
+}
+
+.btn-success {
+  background-color: #f1c40f;
+  border: none;
+  color: #000;
+}
+
+.btn-success:hover {
+  background-color: #e0b90f;
+}
+
+.toggle-password {
+  position: absolute;
+  top: 75%;
+  right: 15px;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #aaa;
+  font-size: 1.1rem;
+  cursor: pointer;
+  z-index: 2;
+}
+
+.toggle-password:hover {
+  color: #f1c40f; /* Acento dorado al pasar el mouse */
+}
+
+.form-floating {
+  position: relative;
+}

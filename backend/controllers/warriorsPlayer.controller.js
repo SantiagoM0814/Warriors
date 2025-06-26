@@ -18,7 +18,7 @@ class WarriorsPlayerController {
             const { insertId } = await WarriorPlayerModel.create({ game_player_fk, warrior_fk });
 
             return res.status(201).json({
-                message: 'WarriorPlayer Created Successfully',
+                message: 'WarriorsPlayer Created Successfully',
                 data: {
                     id: insertId,
                     game_player_fk,
@@ -35,11 +35,11 @@ class WarriorsPlayerController {
         try {
             const existingWarriorPlayer = await WarriorPlayerModel.show();
             if (existingWarriorPlayer.length === 0) {
-                return res.status(400).json({ error: 'No WarriorPlayer found' })
+                return res.status(400).json({ error: 'No WarriorsPlayer found' })
             }
 
             return res.status(200).json({
-                message: 'WarriorPlayer obtained Successfully',
+                message: 'WarriorsPlayer obtained Successfully',
                 data: existingWarriorPlayer
             })
         } catch (error) {
@@ -59,7 +59,7 @@ class WarriorsPlayerController {
 
             const existingWarriorPlayer = await WarriorPlayerModel.findById(id);
             if (!existingWarriorPlayer) {
-                return res.status(409).json({ error: 'WarriorPower not found' });
+                return res.status(409).json({ error: 'WarriorsPlayer not found' });
             }
 
             const existingWarriorAndPlayer = await WarriorPlayerModel.findByWarriorAndPlayer(game_player_fk, warrior_fk);
@@ -77,7 +77,7 @@ class WarriorsPlayerController {
             const updatedWarriorPlayer = await WarriorPlayerModel.update(id, { game_player_fk, warrior_fk });
 
             return res.status(200).json({
-                message: 'WarriorPlayer updated successfully',
+                message: 'WarriorsPlayer updated successfully',
                 data: updatedWarriorPlayer
             });
         } catch (error) {
@@ -96,7 +96,7 @@ class WarriorsPlayerController {
 
             const existingWarriorPlayer = await WarriorPlayerModel.findById(id);
             if (!existingWarriorPlayer) {
-                return res.status(409).json({ error: 'WarriorPlayer not found' });
+                return res.status(409).json({ error: 'WarriorsPlayer not found' });
             }
 
             const deleteWarriorPlayer = await WarriorPlayerModel.delete(id);
@@ -118,11 +118,11 @@ class WarriorsPlayerController {
 
             const existingWarriorPlayer = await WarriorPlayerModel.findById(id);
             if (!existingWarriorPlayer) {
-                return res.status(409).json({ error: 'WarriorPlayer not found' });
+                return res.status(409).json({ error: 'WarriorsPlayer not found' });
             }
 
             return res.status(200).json({
-                message: 'WarriorPlayer found successfully',
+                message: 'WarriorsPlayer found successfully',
                 data: existingWarriorPlayer
             });
         } catch (error) {
