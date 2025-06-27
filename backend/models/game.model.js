@@ -16,10 +16,10 @@ class GameModel {
 
     static async show() {
         try {
-            const sqlQuery = "SELECT * FROM game ORDER BY id";
+            const sqlQuery = "CALL sp_show_game();";
             const [result] = await connect.query(sqlQuery);
 
-            return result;
+            return result[0];
         } catch (error) {
             console.log('Error in GameModel.show:', error);
             throw error;

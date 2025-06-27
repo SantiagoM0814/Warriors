@@ -160,6 +160,12 @@ const sqlStatements = [
   `INSERT INTO role (name) VALUES
     ('Admin');`,
 
+  `INSERT INTO status (name) VALUES
+    ('Activa'),
+    ('Pendiente'),
+    ('Expirada'),
+    ('Finalizada');`,
+
   `INSERT INTO user (username, password, role_fk) VALUES
     ('Admin', '$2b$10$pRvxy7sQXQIpwAGlCOMRzO6cIpiFN6xd4RCQKoZ4eiRLqF2atnXNm', 1);`,  
 
@@ -288,6 +294,16 @@ const sqlStatements = [
       GROUP BY W.id
       ORDER BY W.id;
     END;`,
+
+  `DROP PROCEDURE IF EXISTS sp_show_game;`,
+  `CREATE PROCEDURE sp_show_game()
+    BEGIN
+      SELECT G.id, G.token, G.user_fk, U.username, G.status_fk, S.name AS status, G.created_at, G.expires_at, G.updated_at
+      FROM game AS G
+      INNER JOIN user AS U ON G.user_fk = U.id
+      INNER JOIN status AS S ON G.status_fk = S.id
+      ORDER BY G.id;
+    END;`,  
 ];
 
 export async function runMigration() {

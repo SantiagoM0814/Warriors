@@ -1,119 +1,23 @@
 body {
-  font-family: cursive;
-  background-color: #111;
-  color: #eee;
-  margin: 0;
-  padding: 0;
+    background-color: #1e1e2e;
 }
 
-.container {
-    width: 100vw;
-    height: 100vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+main {
+    color: #f4f4f5;
 }
 
-#tokenArea div{
-    border: 2px solid #f1c40f;
-    border-radius: 10px;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+#app-table th:nth-child(2),
+#app-table td:nth-child(2) {
+  width: 300px !important;
+  max-width: 300px !important;
+  word-break: break-word;
+  white-space: normal; /* para permitir saltos de línea */
 }
 
-.form-label {
-  color: #ddd;
-}
-
-.form-control {
-  background-color: #2a2a3a;
-  border: 1px solid #444;
-  color: #fff;
-}
-
-.form-control::placeholder {
-  color: #aaa;
-}
-
-.form-control:focus {
-  border-color: #f1c40f;
-  box-shadow: 0 0 5px rgba(241, 196, 15, 0.4);
-  background-color: #2a2a3a;
-  color: #fff;
-}
-
-.players {
-  display: flex;
-  justify-content: space-between;
-  gap: 2rem;
-  flex-wrap: wrap;
-}
-
-.card-grid {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 1rem;
-  margin-top: 1rem;
-}
-
-.card {
-  background-color: #222;
-  padding: 1rem;
-  border: 2px solid #555;
-  border-radius: 8px;
-  cursor: pointer;
-  width: 120px;
-  text-align: center;
-  transition: all 0.2s ease-in-out;
-}
-
-.card:hover {
-  transform: scale(1.05);
-  border-color: #888;
-}
-
-.card.selected {
-  border-color: gold;
-  background-color: #333;
-}
-
-.hidden {
-  display: none;
-}
-
-
-.player-area {
-  flex: 1;
-  background-color: #1a1a1a;
-  padding: 1rem;
-  border-radius: 8px;
-}
-
-button {
-  background-color: #f1c40f;
-  border: none;
-  color: #000;
-  margin-top: 1rem;
-  padding: 0.5rem 1rem;
-  border-radius: 6px;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: background-color 0.2s ease-in-out;
-}
-
-button:hover {
-  background-color: #e0b90f;
-}
-
-input[type="text"] {
-  padding: 0.5rem;
-  border-radius: 4px;
-  border: 1px solid #555;
-  background-color: #222;
-  color: #eee;
-  margin-right: 0.5rem;
+#app-table th:nth-child(5),
+#app-table td:nth-child(5) {
+  min-width: 200px !important;
+  max-width: 200px !important;
+  word-break: break-word;
+  white-space: normal; /* para permitir saltos de línea */
 }

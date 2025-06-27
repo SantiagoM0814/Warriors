@@ -12,6 +12,7 @@ const routes = {
   '#user': 'views/user/index.html',
   '#role': 'views/role/index.html',
   '#warrior': 'views/warrior/index.html',
+  '#game': 'views/game/index.html',
   '#profile': 'views/profile/index.html',
   '#userStatus': 'views/userStatus/index.html',
   '#roleUser': 'views/roleUser/index.html'

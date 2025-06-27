@@ -42,6 +42,8 @@ class Form {
   };
 
   validateInputs(input) {
+    if (input.id === 'token') return true;
+    
     const type = input.type;
     const validation = this.VALIDATIONS[type];
 

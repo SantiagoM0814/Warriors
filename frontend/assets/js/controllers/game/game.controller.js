@@ -1,80 +1,237 @@
-const cartasDisponibles = [
-      { nombre: "Espadachín", fuerza: 7, defensa: 5, magia: 1 },
-      { nombre: "Mago", fuerza: 3, defensa: 3, magia: 9 },
-      { nombre: "Arquero", fuerza: 6, defensa: 4, magia: 2 },
-      { nombre: "Hechicera", fuerza: 4, defensa: 2, magia: 8 },
-      { nombre: "Dragón", fuerza: 10, defensa: 7, magia: 5 },
-      { nombre: "Orco", fuerza: 8, defensa: 6, magia: 1 },
-      { nombre: "Guerrero de Fuego", fuerza: 6, defensa: 5, magia: 4 },
-      { nombre: "Nigromante", fuerza: 2, defensa: 4, magia: 9 },
-    ];
+document.addEventListener('DOMContentLoaded', async () => {
+  document.querySelector('body').style.display = 'none';
+  document.querySelector('body').style.opacity = 0;
 
-    let seleccionJugador1 = [];
-    let seleccionJugador2 = [];
+  await checkAuth();
+  console.log('user controller has been loaded');
+  fadeInElement(document.querySelector('body'), 1000);
+  // Initialize the loading screen
 
-    function validarToken() {
-      const token = document.getElementById("token").value;
-      if (token === "GUERREROS2025") {
-        document.getElementById("tokenArea").classList.add("hidden");
-        document.getElementById("juegoArea").classList.remove("hidden");
-        renderCartas("cartasJugador1", seleccionJugador1, 1);
-        renderCartas("cartasJugador2", seleccionJugador2, 2);
-      } else {
-        alert("Token inválido");
-      }
-    }
+});
 
-    function renderCartas(containerId, seleccion, jugador) {
-      const container = document.getElementById(containerId);
-      container.innerHTML = "";
-      cartasDisponibles.forEach((carta, index) => {
-        const div = document.createElement("div");
-        div.classList.add("card");
-        div.innerHTML = `<strong>${carta.nombre}</strong><br>⚔️ ${carta.fuerza} 🛡️ ${carta.defensa} ✨ ${carta.magia}`;
-        div.onclick = () => seleccionarCarta(jugador, index);
-        container.appendChild(div);
-      });
-    }
 
-    function seleccionarCarta(jugador, index) {
-      const seleccion = jugador === 1 ? seleccionJugador1 : seleccionJugador2;
-      if (seleccion.includes(index)) {
-        const idx = seleccion.indexOf(index);
-        seleccion.splice(idx, 1);
-      } else if (seleccion.length < 5) {
-        seleccion.push(index);
-      }
+const objForm = new Form('gameForm', 'edit-input');
+const objModal = new bootstrap.Modal(document.getElementById('appModal'));
+const objTable = new Table ('app-table',['id','token','username','status']);
+const objSelectUser = document.getElementById('user_fk');
+const objSelectState = document.getElementById('status_fk');
+const myForm = objForm.getForm();
+const textConfirm = "Press a button!\nEither OK or Cancel.";
+const appTable = "#app-table";
 
-      renderCartas(`cartasJugador${jugador}`, seleccion, jugador);
-      seleccion.forEach(i => {
-        const cards = document.querySelectorAll(`#cartasJugador${jugador} .card`);
-        cards[i].classList.add("selected");
-      });
+let insertUpdate = true;
+let keyId;
+let documentData = "";
+let httpMethod = "";
+let endpointUrl = "";
 
-      if (seleccionJugador1.length === 5 && seleccionJugador2.length === 5) {
-        document.getElementById("btnJugar").classList.remove("hidden");
-      } else {
-        document.getElementById("btnJugar").classList.add("hidden");
-      }
-    }
+myForm.addEventListener('submit', (e) => {
+  e.preventDefault();
+  if (!objForm.validateForm()) {
+    console.log("Error");
+    return;
+  }
+  toggleLoading(true);
+  if (insertUpdate) {
+    console.log("Insert");
+    httpMethod = METHODS[1]; // POST method
+    endpointUrl = URL_GAME;
+  } else {
+    console.log("Update");
+    httpMethod = METHODS[2]; // PUT method
+    endpointUrl = URL_GAME + keyId;
+  }
+  documentData = objForm.getDataForm();
 
-    function jugar() {
-      let puntosJ1 = calcularPuntos(seleccionJugador1);
-      let puntosJ2 = calcularPuntos(seleccionJugador2);
+  const resultServices = getDataServices(documentData, httpMethod, endpointUrl);
+  resultServices.then(response => {
+    return response.json();
+  }).then(data => {
+    //console.log(data);
+  }).catch(error => {
+    console.log(error);
+  }).finally(() => {
+    //console.log("finally");
+    loadView();
+    showHiddenModal(false);
+  });
+});
 
-      const resultado = document.getElementById("resultado");
-      if (puntosJ1 > puntosJ2) {
-        resultado.textContent = "🏆 ¡Jugador 1 gana!";
-      } else if (puntosJ2 > puntosJ1) {
-        resultado.textContent = "🏆 ¡Jugador 2 gana!";
-      } else {
-        resultado.textContent = "⚔️ ¡Empate!";
-      }
-    }
+function add() {
+  showHiddenModal(true);
+  insertUpdate = true;
+  objForm.resetForm();
+  objForm.enabledEditForm();
+  objForm.enabledButton();
+  objForm.showButton();
+}
 
-    function calcularPuntos(indices) {
-      return indices.reduce((acc, i) => {
-        const carta = cartasDisponibles[i];
-        return acc + carta.fuerza + carta.defensa + carta.magia;
-      }, 0);
-    }
+function showId(id) {
+  objForm.resetForm();
+  objForm.disabledForm();
+  objForm.disabledButton();
+  objForm.hiddenButton();
+  getDataId(id);
+}
+
+function edit(id) {
+  insertUpdate = false;
+  objForm.resetForm();
+  objForm.enabledEditForm();
+  objForm.enabledButton();
+  objForm.showButton();
+  keyId = id;
+  getDataId(id);
+}
+
+function delete_(id) {
+  objForm.resetForm();
+  objForm.enabledForm();
+  objForm.enabledButton();
+  if (confirm(textConfirm)) {
+    documentData = "";
+    httpMethod = METHODS[3]; // DELETE method
+    endpointUrl = URL_GAME + id;
+    const resultServices = getDataServices(documentData, httpMethod, endpointUrl);
+    resultServices.then(response => {
+      return response.json();
+    }).then(data => {
+      //console.log(data);
+    }).catch(error => {
+      console.log(error);
+    }).finally(() => {
+      //console.log("finally");
+      loadView();
+    });
+  } else {
+    console.log("cancel");
+  }
+}
+
+function getDataId(id) {
+  documentData = "";
+  httpMethod = METHODS[0]; // GET method
+  endpointUrl = URL_GAME + id;
+  const resultServices = getDataServices(documentData, httpMethod, endpointUrl);
+  resultServices.then(response => {
+    return response.json();
+  }).then(data => {
+    let getData = data["data"];
+    console.log(getData);
+    objForm.setDataFormJson(getData);
+  }).catch(error => {
+    console.log(error);
+  }).finally(() => {
+    //console.log("finally");
+    showHiddenModal(true);
+  });
+}
+
+function getData() {
+  documentData = "";
+  httpMethod = METHODS[0]; // GET method
+  endpointUrl = URL_GAME;
+
+  const resultServices = getDataServices(documentData, httpMethod, endpointUrl);
+  resultServices.then(response => {
+    return response.json();
+  }).then(data => {
+    //Create table 
+
+    createTable(data);
+  }).catch(error => {
+    console.log(error);
+  }).finally(() => {
+    //console.log("finally");
+    new DataTable(appTable);
+    toggleLoading(false);
+  });
+}
+
+function createTable(data) {
+  objTable.loadData(data.data);
+}
+
+
+function createSelectUser(data) {
+  objSelectUser.innerHTML = "<option value='' selected disabled>Open this select menu</option>";
+
+  let getData = data['data'];
+  if (getData[0] === 0) return;//Validate if the data is empty
+  let rowLong = getData.length;
+  for (let i = 0; i < rowLong; i++) {
+    let row = getData[i];
+    let dataRow = `<option value="${row.id}">${row.username}</option>`;
+    objSelectUser.innerHTML += dataRow;
+  }
+}
+
+function createSelectState(data) {
+  objSelectState.innerHTML = "<option value='' selected disabled>Open this select menu</option>";
+
+  let getData = data['data'];
+  if (getData[0] === 0) return;//Validate if the data is empty
+  let rowLong = getData.length;
+  for (let i = 0; i < rowLong; i++) {
+    let row = getData[i];
+    let dataRow = `<option value="${row.id}">${row.name}</option>`;
+    objSelectState.innerHTML += dataRow;
+  }
+}
+
+function showHiddenModal(type) {
+  if (type) {
+    objModal.show();
+  } else {
+    objModal.hide();
+  }
+}
+
+function loadView() {
+  getData();
+  toggleLoading(true);
+}
+
+function getDataUser() {
+  documentData = "";
+  httpMethod = METHODS[0]; // GET method
+  endpointUrl = URL_USER;
+  const resultServices = getDataServices(documentData, httpMethod, endpointUrl);
+  resultServices.then(response => {
+    return response.json();
+  }).then(data => {
+    //Create table 
+    //console.log(data['data']);
+    createSelectUser(data);
+  }).catch(error => {
+    console.log(error);
+  }).finally(() => {
+    //console.log("finally");
+    new DataTable(appTable);
+    toggleLoading(false);
+  });
+}
+
+function getDataState() {
+  documentData = "";
+  httpMethod = METHODS[0]; // GET method
+  endpointUrl = URL_STATUS;
+  const resultServices = getDataServices(documentData, httpMethod, endpointUrl);
+  resultServices.then(response => {
+    return response.json();
+  }).then(data => {
+    createSelectState(data);
+  }).catch(error => {
+    console.log(error);
+  }).finally(() => {
+    //console.log("finally");
+    new DataTable(appTable);
+    toggleLoading(false);
+  });
+}
+
+window.addEventListener('load', () => {
+  loadView();
+  getDataUser();
+  getDataState();
+});
