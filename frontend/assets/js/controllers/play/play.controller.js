@@ -73,6 +73,17 @@ function mostrarToast(mensaje = 'Operación exitosa', tipo = 'success') {
   toast.show();
 }
 
+function addPlayer() {
+  const input = document.getElementById("nombreJugador1");
+    
+    if (!input.value.trim()) {
+      input.reportValidity(); // muestra el mensaje nativo de HTML
+      return;
+    }
+    const card = document.getElementById('cartasJugador1');
+    card.classList.remove("ocultar-cartas");
+}
+
 function iniciarContadorTiempo(expirationTimeStr) {
   const contadorDiv = document.getElementById("contador-tiempo");
   contadorDiv.classList.add("contador-estilo");
@@ -224,16 +235,19 @@ function seleccionarCarta(carta, jugador) {
       mostrarToast(`Jugador ${jugador} completó su selección`, "success");
     }
   }
-  actualizarBotonJugar();
+  validarTodoListo();
 }
 
-function actualizarBotonJugar() {
+function validarTodoListo() {
+  const nombre1 = document.getElementById("nombreJugador1").value.trim();
+  const nombre2 = document.getElementById("nombreJugador2").value.trim();
+
+  const tiene5CartasJugador1 = cartasSeleccionadas.jugador1.length === 5;
+  const tiene5CartasJugador2 = cartasSeleccionadas.jugador2.length === 5;
+
   const btnJugar = document.getElementById("btnJugar");
 
-  const jugador1Listo = cartasSeleccionadas.jugador1.length === 5;
-  const jugador2Listo = cartasSeleccionadas.jugador2.length === 5;
-
-  if (jugador1Listo && jugador2Listo) {
+  if (nombre1 && nombre2 && tiene5CartasJugador1 && tiene5CartasJugador2) {
     btnJugar.classList.remove("hidden");
   } else {
     btnJugar.classList.add("hidden");
