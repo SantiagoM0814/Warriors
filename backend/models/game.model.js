@@ -3,7 +3,7 @@ import { connect } from '../config/db/connectMySql.js';
 class GameModel {
     static async create({ token, user_fk, status_fk }) {
         try {
-            const expirationTime = new Date(Date.now() + 60 * 60 * 1000); // ahora + 5 minutos
+            const expirationTime = new Date(Date.now() + 5 * 60 * 1000); // ahora + 5 minutos
             const sqlQuery = "INSERT INTO game (token, user_fk, status_fk, expires_at) VALUES (?,?,?,?);";
             const [result] = await connect.query(sqlQuery, [token, user_fk, status_fk, expirationTime]);
 
