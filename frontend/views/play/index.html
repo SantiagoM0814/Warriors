@@ -36,26 +36,27 @@
 
         <div id="juegoArea" class="hidden">
             <div class="players">
-                <div class="player-area" id="jugador1">
+                <div class="player-area text-center" id="jugador1">
                     <div class="mb-3">
                         <label for="nombreJugador1" class="form-label"></i>Ingresa el nombre del jugador 1:</label>
                         <input type="text" class="form-control" id="nombreJugador1" placeholder="Name Player" name="nombreJugador1"
                             required>
-                        <button class="btn btn-success" onclick="addPlayer()">Aceptar</button>
+                        <button id="btn-accept1" class="btn btn-success" onclick="addPlayer(1)">Aceptar</button>
                     </div>
                     <div class="card-grid ocultar-cartas" id="cartasJugador1"></div>
                 </div>
-                <div class="player-area" id="jugador2">
+                <div class="player-area text-center" id="jugador2">
                     <div class="mb-3">
                         <label for="nombreJugador2" class="form-label"></i>Ingresa el nombre del jugador 2:</label>
                         <input type="text" class="form-control" id="nombreJugador2" placeholder="Name Player" name="nombreJugador2"
                             required>
+                        <button id="btn-accept2" class="btn btn-success" onclick="addPlayer(2)">Aceptar</button>
                     </div>
-                    <div class="card-grid" id="cartasJugador2"></div>
+                    <div class="card-grid ocultar-cartas" id="cartasJugador2"></div>
                 </div>
             </div>
             <button id="btnJugar" class="hidden" onclick="jugar()">¡Jugar!</button>
-            <div id="resultado"></div>
+            <div id="resultado" class="hidden"></div>
         </div>
     </div>
     <div id="loading-screen">

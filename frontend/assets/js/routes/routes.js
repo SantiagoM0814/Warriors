@@ -8,19 +8,16 @@ fadeInElement(document.querySelector('body'), 1000);
 
 /*Routes for the application*/
 const routes = {
-  '#dashboard': 'views/dashboard/index.html',
-  '#user': 'views/user/index.html',
-  '#role': 'views/role/index.html',
   '#warrior': 'views/warrior/index.html',
   '#game': 'views/game/index.html',
-  '#profile': 'views/profile/index.html',
-  '#userStatus': 'views/userStatus/index.html',
-  '#roleUser': 'views/roleUser/index.html'
+  '#player': 'views/player/index.html',
+  '#power': 'views/power/index.html',
+  '#magic': 'views/magic/index.html'
 };
 
 function loadContent() {
-  const hash = window.location.hash || '#dashboard';
-  const viewPath = routes[hash] || routes['#dashboard'];
+  const hash = window.location.hash || '#game';
+  const viewPath = routes[hash] || routes['#game'];
   contentFrame.src = viewPath;
   document.querySelectorAll('.nav-link').forEach(link => {
     link.classList.toggle('active', link.getAttribute('href') === hash);

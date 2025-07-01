@@ -11,6 +11,10 @@ const URL_STATUS=HOST+"/status/";
 const URL_LOGIN=HOST+"/login/";
 const URL_USER=HOST+"/user/";
 const URL_TOKEN_GAME=URL_GAME+"validate-token";
+const URL_PLAYER=HOST+"/player/";
+const URL_GAME_PLAYER=HOST+"/gamePlayer/";
+const URL_WARRIORS_PLAYER=HOST+"/warriorsPlayer/";
+const URL_POWER=HOST+"/power/";
 
 
 const KEY_TOKEN="token-app";

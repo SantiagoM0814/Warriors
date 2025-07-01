@@ -3,7 +3,7 @@ import { connect } from '../config/db/connectMySql.js';
 class GameModel {
     static async create({ token, user_fk, status_fk }) {
         try {
-            const expirationTime = new Date(Date.now() + 5 * 60 * 1000); // ahora + 5 minutos
+            const expirationTime = new Date(Date.now() + 60 * 60 * 1000); // ahora + 5 minutos
             const sqlQuery = "INSERT INTO game (token, user_fk, status_fk, expires_at) VALUES (?,?,?,?);";
             const [result] = await connect.query(sqlQuery, [token, user_fk, status_fk, expirationTime]);
 
@@ -26,10 +26,10 @@ class GameModel {
         }
     }
 
-    static async update(id, { user_fk, status_fk }) {
+    static async update(id, { status_fk }) {
         try {
-            const sqlQuery = "UPDATE game SET user_fk = ?, status_fk = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
-            const [result] = await connect.query(sqlQuery, [user_fk, status_fk, id]);
+            const sqlQuery = "UPDATE game SET status_fk = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+            const [result] = await connect.query(sqlQuery, [status_fk, id]);
 
             if (result.affectedRows === 0) return null;
 

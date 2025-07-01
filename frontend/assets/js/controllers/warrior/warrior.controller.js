@@ -1,3 +1,13 @@
+document.addEventListener('DOMContentLoaded', async () => {
+  document.querySelector('body').style.display = 'none';
+  document.querySelector('body').style.opacity = 0;
+
+  await checkAuth();
+  console.log('user controller has been loaded');
+  fadeInElement(document.querySelector('body'), 1000);
+  // Initialize the loading screen
+
+});
 
 const objForm = new Form('documentTypeForm', 'edit-input');
 const objCart = document.getElementById('container-carts')

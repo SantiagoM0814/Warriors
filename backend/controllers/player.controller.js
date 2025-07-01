@@ -11,7 +11,7 @@ class PlayerController {
 
             const existingPlayer = await PlayerModel.findByName(name);
             if (existingPlayer) {
-                return res.status(409).json({ error: 'There is already a player with that name' });
+                return res.status(200).json({ data: existingPlayer });
             }
 
             const { insertId } = await PlayerModel.create({ name });

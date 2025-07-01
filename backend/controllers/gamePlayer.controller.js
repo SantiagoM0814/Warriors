@@ -5,7 +5,7 @@ class GamePlayerController {
         try {
             const { winner, game_fk, player_fk } = req.body;
 
-            if (!winner || !game_fk || !player_fk) {
+            if (winner === undefined || !game_fk || !player_fk) {
                 return res.status(400).json({ error: 'Required fields are missing' });
             }
 

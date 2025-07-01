@@ -1,4 +1,6 @@
 const objForm = new Form('tokenForm', 'edit-input');
+let namePlayer1 = null;
+let namePlayer2 = null;
 const appStorage = new AppStorage();
 const myForm = objForm.getForm();
 
@@ -73,44 +75,25 @@ function mostrarToast(mensaje = 'Operación exitosa', tipo = 'success') {
   toast.show();
 }
 
-function addPlayer() {
-  const input = document.getElementById("nombreJugador1");
-    
-    if (!input.value.trim()) {
-      input.reportValidity(); // muestra el mensaje nativo de HTML
-      return;
-    }
-    const card = document.getElementById('cartasJugador1');
-    card.classList.remove("ocultar-cartas");
-}
+async function addPlayer(jugador) {
+  const input = document.getElementById(`nombreJugador${jugador}`);
+  const button = document.getElementById(`btn-accept${jugador}`);
+  const card = document.getElementById(`cartasJugador${jugador}`);
 
-function iniciarContadorTiempo(expirationTimeStr) {
-  const contadorDiv = document.getElementById("contador-tiempo");
-  contadorDiv.classList.add("contador-estilo");
-  const expirationTime = new Date(expirationTimeStr).getTime();
+  if (!input.value.trim()) {
+    input.reportValidity(); // muestra el mensaje de requerido
+    return;
+  }
 
-  const interval = setInterval(() => {
-    const now = new Date().getTime();
-    const timeLeft = expirationTime - now;
+  if (jugador === 1) {
+    namePlayer1 = input.value.trim();
+  } else if (jugador === 2) {
+    namePlayer2 = input.value.trim();
+  }
 
-    if (timeLeft <= 0) {
-      clearInterval(interval);
-      contadorDiv.textContent = "¡Tiempo agotado!";
-      mostrarToast("La partida ha expirado", "warning");
-      // Aquí puedes redirigir o bloquear acciones si deseas
-
-      setTimeout(() => {
-        location.reload(); // recarga la página
-      }, 3000); // 3000 milisegundos = 3 segundos
-      return;
-    }
-
-    // Convertir milisegundos a minutos y segundos
-    const minutos = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
-    const segundos = Math.floor((timeLeft % (1000 * 60)) / 1000);
-
-    contadorDiv.textContent = `Tiempo restante: ${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')} ⌛`;
-  }, 1000);
+  button.classList.add("hidden");
+  input.disabled = true;
+  card.classList.remove("ocultar-cartas");
 }
 
 function getData() {
@@ -254,7 +237,7 @@ function validarTodoListo() {
   }
 }
 
-function jugar() {
+async function jugar() {
   if (cartasSeleccionadas.jugador1.length < 5 || cartasSeleccionadas.jugador2.length < 5) {
     mostrarToast("Ambos jugadores deben tener 5 cartas seleccionadas", "danger");
     return;
@@ -273,11 +256,15 @@ function jugar() {
   const puntuacion1 = totalJugador1 + azar1;
   const puntuacion2 = totalJugador2 + azar2;
 
+  let ganadorJugador1 = 0;
+  let ganadorJugador2 = 0;
   let mensaje = '';
   if (puntuacion1 > puntuacion2) {
     mensaje = '🎉 ¡Jugador 1 gana la partida!';
+    ganadorJugador1 = 1;
   } else if (puntuacion2 > puntuacion1) {
     mensaje = '🎉 ¡Jugador 2 gana la partida!';
+     ganadorJugador2 = 1;
   } else {
     mensaje = '🤝 ¡Empate!';
   }
@@ -286,10 +273,172 @@ function jugar() {
   resultadoDiv.textContent = mensaje;
   resultadoDiv.classList.remove("hidden");
 
-  console.log("Puntaje Jugador 1:", puntuacion1, "(+ azar:", azar1 + ")");
-  console.log("Puntaje Jugador 2:", puntuacion2, "(+ azar:", azar2 + ")");
+  const IdPlayer1 = await registrarJugador(namePlayer1);
+  console.log("ID JUGADOR1:", IdPlayer1);
+  const IdPlayer2 = await registrarJugador(namePlayer2);
+  console.log("ID JUGADOR2:", IdPlayer2);
+  
+  const IdGame = appStorage.getItem("game_id");
+
+  const IdGamePlayer1 = await gamePlayer(ganadorJugador1, IdGame, IdPlayer1);
+  console.log("ID GAMEPLAYER1:", IdGamePlayer1);
+  const IdGamePlayer2 = await gamePlayer(ganadorJugador2, IdGame, IdPlayer2);
+  console.log("ID GAMEPLAYER2:",IdGamePlayer2);
+
+  for (let cards of cartasSeleccionadas.jugador1){
+    await warriorPlayer (IdGamePlayer1, cards.id);
+  }
+
+  for (let cards of cartasSeleccionadas.jugador2){
+    await warriorPlayer (IdGamePlayer2, cards.id);
+  }
+
+  const expirada = 2;
+  updateState(IdGame, expirada);
+  endGame();
 }
 
+function endGame () {
+  const btnJugar = document.getElementById("btnJugar");
+  btnJugar.classList.add("hidden");
+
+  setTimeout(() => {
+    location.reload();
+  }, 10000);
+}
+
+async function warriorPlayer(game, warrior) {
+  const httpMethod = METHODS[1]; // POST
+  const endpointUrl = URL_WARRIORS_PLAYER;
+
+  const documentData = {
+    game_player_fk: game,
+    warrior_fk: warrior
+  };
+
+  try {
+    const response = await getDataServices(documentData, httpMethod, endpointUrl);
+    const result = await response.json();
+
+    if (result.error || !result.data) {
+      mostrarToast("Error al registrar WarriorPlayer", "danger");
+      return null;
+    }
+
+    return result.data.id; // Esto tendrá el id del game_player
+  } catch (error) {
+    console.error("Error registrando WarriorPlayer:", error);
+    mostrarToast("Error de conexión", "danger");
+    return null;
+  }
+}
+
+async function registrarJugador(nombreJugador) {
+  const httpMethod = METHODS[1]; // POST
+  const endpointUrl = URL_PLAYER;
+
+  const documentData = {
+    name: nombreJugador
+  };
+
+  try {
+    const response = await getDataServices(documentData, httpMethod, endpointUrl);
+    const result = await response.json();
+
+    if (result.error || !result.data) {
+      mostrarToast("Error al registrar jugador", "danger");
+      return null;
+    }
+
+    return result.data.id; // Esto tendrá el id del game_player
+  } catch (error) {
+    console.error("Error registrando jugador:", error);
+    mostrarToast("Error de conexión", "danger");
+    return null;
+  }
+}
+
+async function updateState(id, status) {
+  const httpMethod = METHODS[2]; // POST
+  const endpointUrl = URL_GAME + id;
+
+  const documentData = {
+    status_fk: status
+  };
+
+  try {
+    const response = await getDataServices(documentData, httpMethod, endpointUrl);
+    const result = await response.json();
+
+    if (result.error || !result.data) {
+      mostrarToast("Error al actualizar partida", "danger");
+      return null;
+    }
+
+    return result.data.id; // Esto tendrá el id del game_player
+  } catch (error) {
+    console.error("Error actualizando partida:", error);
+    mostrarToast("Error de conexión", "danger");
+    return null;
+  }
+}
+
+async function gamePlayer(winner, game, player) {
+  const httpMethod = METHODS[1]; // POST
+  const endpointUrl = URL_GAME_PLAYER;
+
+  const documentData = {
+    winner: winner,
+    game_fk: game,
+    player_fk: player
+  };
+
+  try {
+    const response = await getDataServices(documentData, httpMethod, endpointUrl);
+    const result = await response.json();
+
+    if (result.error || !result.data) {
+      mostrarToast("Error al registrar GamePlayer", "danger");
+      return null;
+    }
+
+    console.log(result.data.id);
+    return result.data.id; // Esto tendrá el id del game_player
+  } catch (error) {
+    console.error("Error registrando GamePlayer:", error);
+    mostrarToast("Error de conexión", "danger");
+    return null;
+  }
+}
+
+function iniciarContadorTiempo(expirationTimeStr) {
+  const contadorDiv = document.getElementById("contador-tiempo");
+  contadorDiv.classList.add("contador-estilo");
+  const expirationTime = new Date(expirationTimeStr).getTime();
+
+  const interval = setInterval(() => {
+    const now = new Date().getTime();
+    const timeLeft = expirationTime - now;
+
+    if (timeLeft <= 0) {
+      clearInterval(interval);
+      contadorDiv.textContent = "¡Tiempo agotado!";
+      mostrarToast("La partida ha expirado", "warning");
+      // Aquí puedes redirigir o bloquear acciones si deseas
+
+      setTimeout(() => {
+        location.reload(); // recarga la página
+      }, 3000); // 3000 milisegundos = 3 segundos
+      return;
+    }
+
+    // Convertir milisegundos a minutos y segundos
+    const minutos = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+    const segundos = Math.floor((timeLeft % (1000 * 60)) / 1000);
+
+    contadorDiv.textContent = `Tiempo restante: ${minutos.toString().padStart(2, '0')}:${segundos.toString().padStart(2, '0')} ⌛`;
+  }, 1000);
+}
 
 function loadView() {
   getData();

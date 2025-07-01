@@ -51,10 +51,10 @@ class GameController {
 
     async update(req, res) {
         try {
-            const { user_fk, status_fk } = req.body;
+            const { status_fk } = req.body;
             const id = req.params.id;
 
-            if (!user_fk || !status_fk || !id || isNaN(id)) {
+            if (!status_fk || !id || isNaN(id)) {
                 return res.status(400).json({ error: 'Required fields are missing' });
             }
 
@@ -63,14 +63,14 @@ class GameController {
                 return res.status(409).json({ error: 'There is not game' });
             }
 
-            if (existingGame.user_fk === user_fk && existingGame.status_fk === status_fk) {
+            if (existingGame.status_fk === status_fk) {
                 return res.status(200).json({
                     message: 'No changes detected',
                     data: existingGame
                 });
             }
 
-            const updatedGame = await GameModel.update(id, { user_fk, status_fk });
+            const updatedGame = await GameModel.update(id, { status_fk });
 
             return res.status(200).json({
                 message: 'Game updated successfully',
@@ -138,6 +138,10 @@ class GameController {
         const game = await GameModel.findByToken(token);
         if (!game) {
             return res.status(404).json({ error: 'Game not found' });
+        }
+
+        if (game.status_fk !== 1) {
+            return res.status(403).json({ error: 'El estado del juego no es activo' });
         }
 
         const now = new Date();
