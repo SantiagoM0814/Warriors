@@ -25,6 +25,9 @@ class Table {
           cell.innerHTML = `<input type="password" value="${item[col]}" disabled readonly />`;
         } else if (col === 'photo_url') {
           cell.innerHTML = `<img src="../../../../${item[col]}" height="50px">`;
+        } else if (col === 'gamePlayer_winner') {
+          const estado = item[col] === 1 ? 'Ganador' : 'Perdedor';
+          cell.innerHTML = estado;
         }
         else {
           // Si es otra columna, mostrar texto normal

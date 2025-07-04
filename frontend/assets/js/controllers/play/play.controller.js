@@ -293,8 +293,8 @@ async function jugar() {
     await warriorPlayer (IdGamePlayer2, cards.id);
   }
 
-  const expirada = 2;
-  updateState(IdGame, expirada);
+  const finalizada = 3;
+  updateState(IdGame, finalizada);
   endGame();
 }
 
@@ -425,6 +425,10 @@ function iniciarContadorTiempo(expirationTimeStr) {
       contadorDiv.textContent = "¡Tiempo agotado!";
       mostrarToast("La partida ha expirado", "warning");
       // Aquí puedes redirigir o bloquear acciones si deseas
+
+      const IdGame = appStorage.getItem("game_id");
+      const expirada = 2;
+      updateState(IdGame, expirada);
 
       setTimeout(() => {
         location.reload(); // recarga la página

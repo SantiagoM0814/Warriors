@@ -10,9 +10,12 @@ fadeInElement(document.querySelector('body'), 1000);
 const routes = {
   '#warrior': 'views/warrior/index.html',
   '#game': 'views/game/index.html',
+  '#gamePlayer': 'views/gamePlayer/index.html',
   '#player': 'views/player/index.html',
   '#power': 'views/power/index.html',
-  '#magic': 'views/magic/index.html'
+  '#magic': 'views/magic/index.html',
+  '#breed': 'views/breed/index.html',
+  '#typeWarrior': 'views/typeWarrior/index.html'
 };
 
 function loadContent() {

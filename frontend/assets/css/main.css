@@ -49,6 +49,8 @@ body, html {
 
     #contentFrame {
       width: 100%;
+      min-height: 85vh;
+      height: auto;
       display: block;
       border: none;
     }

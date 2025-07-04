@@ -302,7 +302,19 @@ const sqlStatements = [
       INNER JOIN user AS U ON G.user_fk = U.id
       INNER JOIN status AS S ON G.status_fk = S.id
       ORDER BY G.id;
-    END;`,  
+    END;`,
+
+  `DROP PROCEDURE IF EXISTS sp_show_gamePlayer;`,
+  `CREATE PROCEDURE sp_show_gamePlayer()
+    BEGIN
+
+      SELECT GP.id, GP.gamePlayer_winner, GP.game_fk, G.token AS game, GP.player_fk, P.name AS player
+      FROM game_player AS GP
+      INNER JOIN game AS G ON GP.game_fk = G.id
+      INNER JOIN player AS P ON GP.player_fk = P.id
+      ORDER BY GP.id;
+
+    END;`,
 ];
 
 export async function runMigration() {

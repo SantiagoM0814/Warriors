@@ -15,7 +15,7 @@ class GamePlayerModel {
 
     static async show() {
         try {
-            const sqlQuery = "SELECT * FROM game_player ORDER BY id";
+            const sqlQuery = "CALL sp_show_gamePlayer()";
             const [result] = await connect.query(sqlQuery);
 
             return result;

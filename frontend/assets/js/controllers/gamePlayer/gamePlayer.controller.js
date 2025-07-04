@@ -1,19 +1,18 @@
-
-
-document.addEventListener('DOMContentLoaded', async ()=> {
+document.addEventListener('DOMContentLoaded', async () => {
   document.querySelector('body').style.display = 'none';
   document.querySelector('body').style.opacity = 0;
- 
+
   await checkAuth();
-  console.log('role controller has been loaded');
+  console.log('user controller has been loaded');
   fadeInElement(document.querySelector('body'), 1000);
   // Initialize the loading screen
-    
+
 });
 
-const objForm = new Form('roleForm', 'edit-input');
+
+const objForm = new Form('gamePlayerForm', 'edit-input');
 const objModal = new bootstrap.Modal(document.getElementById('appModal'));
-const objTable = new Table('app-table',['id','name','description']);
+const objTable = new Table ('app-table',['id','gamePlayer_winner','game','player']);
 const myForm = objForm.getForm();
 const textConfirm = "Press a button!\nEither OK or Cancel.";
 const appTable = "#app-table";
@@ -34,13 +33,14 @@ myForm.addEventListener('submit', (e) => {
   if (insertUpdate) {
     console.log("Insert");
     httpMethod = METHODS[1]; // POST method
-    endpointUrl = URL_ROLE;
+    endpointUrl = URL_GAME_PLAYER;
   } else {
     console.log("Update");
     httpMethod = METHODS[2]; // PUT method
-    endpointUrl = URL_ROLE + keyId;
+    endpointUrl = URL_GAME_PLAYER + keyId;
   }
   documentData = objForm.getDataForm();
+
   const resultServices = getDataServices(documentData, httpMethod, endpointUrl);
   resultServices.then(response => {
     return response.json();
@@ -59,7 +59,7 @@ function add() {
   showHiddenModal(true);
   insertUpdate = true;
   objForm.resetForm();
-  objForm.enabledForm();
+  objForm.enabledEditForm();
   objForm.enabledButton();
   objForm.showButton();
 }
@@ -89,7 +89,7 @@ function delete_(id) {
   if (confirm(textConfirm)) {
     documentData = "";
     httpMethod = METHODS[3]; // DELETE method
-    endpointUrl = URL_ROLE + id;
+    endpointUrl = URL_GAME_PLAYER + id;
     const resultServices = getDataServices(documentData, httpMethod, endpointUrl);
     resultServices.then(response => {
       return response.json();
@@ -109,12 +109,13 @@ function delete_(id) {
 function getDataId(id) {
   documentData = "";
   httpMethod = METHODS[0]; // GET method
-  endpointUrl = URL_ROLE + id;
+  endpointUrl = URL_GAME_PLAYER + id;
   const resultServices = getDataServices(documentData, httpMethod, endpointUrl);
   resultServices.then(response => {
     return response.json();
   }).then(data => {
-    let getData = data["data"][0];
+    let getData = data["data"];
+    console.log(getData);
     objForm.setDataFormJson(getData);
   }).catch(error => {
     console.log(error);
@@ -125,18 +126,16 @@ function getDataId(id) {
 }
 
 function getData() {
-  const storage = new AppStorage();
-  const token = storage.getItem('token-app'); // Asegúrate de que el nombre coincida con el que usaste al guardarlo
-  console.log(token);
   documentData = "";
   httpMethod = METHODS[0]; // GET method
-  endpointUrl = URL_ROLE;
-  const resultServices = getServicesAuth(documentData, httpMethod, endpointUrl, token);
+  endpointUrl = URL_GAME_PLAYER;
+
+  const resultServices = getDataServices(documentData, httpMethod, endpointUrl);
   resultServices.then(response => {
     return response.json();
   }).then(data => {
     //Create table 
-    //console.log(data['data']);
+
     createTable(data);
   }).catch(error => {
     console.log(error);
@@ -148,7 +147,7 @@ function getData() {
 }
 
 function createTable(data) {
-  objTable.loadData(data.data)
+  objTable.loadData(data.data);
 }
 
 function showHiddenModal(type) {
@@ -167,4 +166,3 @@ function loadView() {
 window.addEventListener('load', () => {
   loadView();
 });
-
