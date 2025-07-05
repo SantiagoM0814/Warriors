@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulario de Razas</title>
+    <title>Formulario de guerreros del jugador</title>
     <!-- Favicon -->
     <link rel="icon" href="../../assets//img/logos/logo.png" type="image/png">
     <!-- Bootstrap 5 CSS -->
@@ -25,7 +25,7 @@
 
         <!--Content data-->
         <main>
-            <h1 class="text-center">Formulario de partidas jugadas</h1>
+            <h1 class="text-center">Formulario de guerreros del jugador</h1>
             <button type="button" title="Add Document Type " class="btn btn-primary" onclick="add()"> <i
                     class="fa fa-address-card me-1"></i></button>
 
@@ -36,8 +36,9 @@
                         <tr class="table-primary text-center">
                             <th class="text-center">#</th>
                             <th class="text-center">Resultado</th>
-                            <th class="text-center column-token">Partida</th>
                             <th class="text-center">Jugador</th>
+                            <th class="text-center">Guerrero</th>
+                            <th class="text-center">Imagen</th>
                             <th class="text-center">Actions</th>
                         </tr>
                     </thead>
@@ -48,8 +49,9 @@
                         <tr class="table-primary text-center">
                             <td class="text-center">#</td>
                             <td class="text-center">Resultado</td>
-                            <td class="text-center column-token">Partida</td>
                             <td class="text-center">Jugador</td>
+                            <td class="text-center">Guerrero</td>
+                            <td class="text-center">Imagen</td>
                             <td class="text-center">Actions</td>
                         </tr>
                     </tfoot>
@@ -61,32 +63,26 @@
             <div class="modal-dialog">
                 <div class="modal-content">
                     <div class="modal-header">
-                        <h1 class="modal-title fs-5" id="appModalLabel">Crear partida jugada</h1>
+                        <h1 class="modal-title fs-5" id="appModalLabel">Crear guerrero del jugador</h1>
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
                         <!--Form-->
-                        <form id="gamePlayerForm">
+                        <form id="warriorPlayerForm">
                             <div class="mb-3">
-                                <label for="winner">Resultado</label>
-                                <select class="form-select form-select-sm" id="winner" name="winner"
-                                    aria-label=".form-select-sm example" required>
-                                    <option value="1">Ganador</option>
-                                    <option value="0">Perdedor</option>
-                                </select>
-                            </div>
-                            <div class="mb-3">
-                                <label for="game_fk">Partida</label>
-                                <select class="form-select form-select-sm" id="game_fk" name="game_fk"
+                                <label for="game_player_fk">Jugador</label>
+                                <select class="form-select form-select-sm" id="game_player_fk" name="game_player_fk"
                                     aria-label=".form-select-sm example" required>
                                 </select>
                             </div>
                             <div class="mb-3">
-                                <label for="player_fk">Jugador</label>
-                                <select class="form-select form-select-sm" id="player_fk" name="player_fk"
+                                <label for="warrior_fk">Guerrero</label>
+                                <select class="form-select form-select-sm" id="warrior_fk" name="warrior_fk"
                                     aria-label=".form-select-sm example" required>
                                 </select>
                             </div>
+                            <div class="mb-3 text-center" id="warrior-image-container"></div>
+
                             <div class="mb-1 col-12">
                                 <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                                     <button type="reset" class="btn btn-outline-secondary me-md-2"><i
@@ -133,7 +129,7 @@
 
     <script src="../../assets/js/utils/Table.js"></script>
     <script src="../../assets/js/utils/Form.js"></script>
-    <script src="../../assets/js/controllers/gamePlayer/gamePlayer.controller.js"></script>
+    <script src="../../assets/js/controllers/warriorPlayer/warriorPlayer.controller.js"></script>
 
 </body>
 

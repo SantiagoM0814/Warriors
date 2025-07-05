@@ -9,6 +9,8 @@ fadeInElement(document.querySelector('body'), 1000);
 /*Routes for the application*/
 const routes = {
   '#warrior': 'views/warrior/index.html',
+  '#warriorPower': 'views/warriorPower/index.html',
+  '#warriorPlayer': 'views/warriorPlayer/index.html',
   '#game': 'views/game/index.html',
   '#gamePlayer': 'views/gamePlayer/index.html',
   '#player': 'views/player/index.html',

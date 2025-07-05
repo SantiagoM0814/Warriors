@@ -15,10 +15,10 @@ class WarriorPowerModel {
 
     static async show() {
         try {
-            const sqlQuery = "SELECT * FROM warrior_power ORDER BY id";
+            const sqlQuery = "CALL sp_show_warriorPower()";
             const [result] = await connect.query(sqlQuery);
 
-            return result;
+            return result[0];
         } catch (error) {
             console.log('Error in WarriorPowerModel.show:', error);
             throw error;

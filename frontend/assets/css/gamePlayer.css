@@ -1,0 +1,25 @@
+body {
+    background-color: #1e1e2e;
+}
+
+main {
+    color: #f4f4f5;
+}
+
+#app-table th:nth-child(3),
+#app-table td:nth-child(3) {
+  width: 300px !important;
+  max-width: 300px !important;
+  word-break: break-word;
+  white-space: normal; /* para permitir saltos de línea */
+}
+
+#app-table th:nth-child(5),
+#app-table td:nth-child(5) {
+  width: 300px !important;
+  max-width: 300px !important;
+  word-break: break-word;
+  white-space: normal; /* para permitir saltos de línea */
+}
+
+

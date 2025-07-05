@@ -10,11 +10,11 @@ document.addEventListener('DOMContentLoaded', async () => {
 });
 
 
-const objForm = new Form('gamePlayerForm', 'edit-input');
+const objForm = new Form('warriorPlayerForm', 'edit-input');
 const objModal = new bootstrap.Modal(document.getElementById('appModal'));
-const objTable = new Table ('app-table',['id','gamePlayer_winner','game','player']);
-const objSelectGame = document.getElementById('game_fk');
-const objSelectPlayer = document.getElementById('player_fk');
+const objTable = new Table ('app-table',['id','result','player_name','name_warrior','photo_url']);
+const objSelectGamePlayer = document.getElementById('game_player_fk');
+const objSelectWarrior = document.getElementById('warrior_fk');
 const myForm = objForm.getForm();
 const textConfirm = "Press a button!\nEither OK or Cancel.";
 const appTable = "#app-table";
@@ -35,11 +35,11 @@ myForm.addEventListener('submit', (e) => {
   if (insertUpdate) {
     console.log("Insert");
     httpMethod = METHODS[1]; // POST method
-    endpointUrl = URL_GAME_PLAYER;
+    endpointUrl = URL_WARRIORS_PLAYER;
   } else {
     console.log("Update");
     httpMethod = METHODS[2]; // PUT method
-    endpointUrl = URL_GAME_PLAYER + keyId;
+    endpointUrl = URL_WARRIORS_PLAYER + keyId;
   }
   documentData = objForm.getDataForm();
   console.log(documentData);
@@ -92,7 +92,7 @@ function delete_(id) {
   if (confirm(textConfirm)) {
     documentData = "";
     httpMethod = METHODS[3]; // DELETE method
-    endpointUrl = URL_GAME_PLAYER + id;
+    endpointUrl = URL_WARRIORS_PLAYER + id;
     const resultServices = getDataServices(documentData, httpMethod, endpointUrl);
     resultServices.then(response => {
       return response.json();
@@ -112,7 +112,7 @@ function delete_(id) {
 function getDataId(id) {
   documentData = "";
   httpMethod = METHODS[0]; // GET method
-  endpointUrl = URL_GAME_PLAYER + id;
+  endpointUrl = URL_WARRIORS_PLAYER + id;
   const resultServices = getDataServices(documentData, httpMethod, endpointUrl);
   resultServices.then(response => {
     return response.json();
@@ -130,7 +130,7 @@ function getDataId(id) {
 function getData() {
   documentData = "";
   httpMethod = METHODS[0]; // GET method
-  endpointUrl = URL_GAME_PLAYER;
+  endpointUrl = URL_WARRIORS_PLAYER;
 
   const resultServices = getDataServices(documentData, httpMethod, endpointUrl);
   resultServices.then(response => {
@@ -151,17 +151,15 @@ function createTable(data) {
   objTable.loadData(data.data);
 }
 
-function getDataGame() {
+function getDataGamePlayer() {
   documentData = "";
   httpMethod = METHODS[0]; // GET method
-  endpointUrl = URL_GAME;
+  endpointUrl = URL_GAME_PLAYER;
   const resultServices = getDataServices(documentData, httpMethod, endpointUrl);
   resultServices.then(response => {
     return response.json();
   }).then(data => {
-    //Create table 
-    //console.log(data['data']);
-    createSelectGame(data);
+    createSelectGamePlayer(data);
   }).catch(error => {
     console.log(error);
   }).finally(() => {
@@ -171,28 +169,29 @@ function getDataGame() {
   });
 }
 
-function createSelectGame(data) {
-  objSelectGame.innerHTML = "<option value='' selected disabled>Open this select menu</option>";
+function createSelectGamePlayer(data) {
+  objSelectGamePlayer.innerHTML = "<option value='' selected disabled>Open this select menu</option>";
 
   let getData = data['data'];
+  console.log(getData);
   if (getData[0] === 0) return;//Validate if the data is empty
   let rowLong = getData.length;
   for (let i = 0; i < rowLong; i++) {
     let row = getData[i];
-    let dataRow = `<option value="${row.id}">${row.id}</option>`;
-    objSelectGame.innerHTML += dataRow;
+    let dataRow = `<option value="${row.id}">${row.player}</option>`;
+    objSelectGamePlayer.innerHTML += dataRow;
   }
 }
 
-function getDataPlayer() {
+function getDataWarrior() {
   documentData = "";
   httpMethod = METHODS[0]; // GET method
-  endpointUrl = URL_PLAYER;
+  endpointUrl = URL_WARRIOR;
   const resultServices = getDataServices(documentData, httpMethod, endpointUrl);
   resultServices.then(response => {
     return response.json();
   }).then(data => {
-    createSelectPlayer(data);
+    createSelectWarrior(data);
   }).catch(error => {
     console.log(error);
   }).finally(() => {
@@ -202,18 +201,31 @@ function getDataPlayer() {
   });
 }
 
-function createSelectPlayer(data) {
-  objSelectPlayer.innerHTML = "<option value='' selected disabled>Open this select menu</option>";
+function createSelectWarrior(data) {
+  objSelectWarrior.innerHTML = "<option value='' selected disabled>Open this select menu</option>";
 
   let getData = data['data'];
   if (getData[0] === 0) return;//Validate if the data is empty
   let rowLong = getData.length;
   for (let i = 0; i < rowLong; i++) {
     let row = getData[i];
-    let dataRow = `<option value="${row.id}">${row.name}</option>`;
-    objSelectPlayer.innerHTML += dataRow;
+    let dataRow = `<option value="${row.id}" data-img="${row.photo}">${row.name}</option>`;
+    objSelectWarrior.innerHTML += dataRow;
   }
 }
+
+objSelectWarrior.addEventListener('change', function () {
+  const selectedOption = this.options[this.selectedIndex];
+  const imgUrl = selectedOption.getAttribute('data-img');
+
+  const imageContainer = document.getElementById('warrior-image-container');
+  if (imgUrl) {
+    imageContainer.innerHTML = `<img src="../../../../${imgUrl}" alt="Guerrero" height="100" style="border-radius: 5px;">`;
+  } else {
+    imageContainer.innerHTML = '';
+  }
+});
+
 
 function showHiddenModal(type) {
   if (type) {
@@ -230,6 +242,6 @@ function loadView() {
 
 window.addEventListener('load', () => {
   loadView();
-  getDataGame();
-  getDataPlayer();
+  getDataGamePlayer();
+  getDataWarrior();
 });

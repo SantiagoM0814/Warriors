@@ -15,6 +15,7 @@ const URL_PLAYER=HOST+"/player/";
 const URL_GAME_PLAYER=HOST+"/gamePlayer/";
 const URL_WARRIORS_PLAYER=HOST+"/warriorsPlayer/";
 const URL_POWER=HOST+"/power/";
+const URL_WARRIOR_POWER=HOST+"/warriorPower/";
 
 
 const KEY_TOKEN="token-app";

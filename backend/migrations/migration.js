@@ -308,12 +308,35 @@ const sqlStatements = [
   `CREATE PROCEDURE sp_show_gamePlayer()
     BEGIN
 
-      SELECT GP.id, GP.gamePlayer_winner, GP.game_fk, G.token AS game, GP.player_fk, P.name AS player
+      SELECT GP.id, CASE WHEN GP.gamePlayer_winner = 1 THEN 'Ganador' ELSE 'Perdedor' END AS gamePlayer_winner, 
+      GP.game_fk, G.token AS game, GP.player_fk, P.name AS player
       FROM game_player AS GP
       INNER JOIN game AS G ON GP.game_fk = G.id
       INNER JOIN player AS P ON GP.player_fk = P.id
       ORDER BY GP.id;
 
+    END;`,
+
+  `DROP PROCEDURE IF EXISTS sp_show_warriorPower;`,
+  `CREATE PROCEDURE sp_show_warriorPower()
+    BEGIN
+
+    SELECT WP.id, WP.warrior_fk, W.name AS name_warrior, W.photo AS photo_url, WP.power_fk,  P.name AS power
+    FROM warrior_power AS WP
+    INNER JOIN warrior AS W ON WP.warrior_fk = W.id
+    INNER JOIN power AS P ON WP.power_fk = P.id;
+
+    END;`,
+
+  `DROP PROCEDURE IF EXISTS sp_show_warriorPlayer;`,
+  `CREATE PROCEDURE sp_show_warriorPlayer()
+    BEGIN
+      SELECT WP.id, WP.game_player_fk, CASE GP.gamePlayer_winner WHEN 1 THEN 'Ganador'ELSE 'Perdedor'END AS result,
+        GP.player_fk, P.name AS player_name, WP.warrior_fk, W.name AS name_warrior, W.photo AS photo_url
+      FROM warriors_player AS WP
+      INNER JOIN game_player AS GP ON WP.game_player_fk = GP.id
+      INNER JOIN warrior AS W ON WP.warrior_fk = W.id
+      INNER JOIN player AS P ON GP.player_fk = P.id;
     END;`,
 ];
 

@@ -18,7 +18,7 @@ class GamePlayerModel {
             const sqlQuery = "CALL sp_show_gamePlayer()";
             const [result] = await connect.query(sqlQuery);
 
-            return result;
+            return result[0];
         } catch (error) {
             console.log('Error in GamePlayerModel.show:', error);
             throw error;
@@ -27,7 +27,7 @@ class GamePlayerModel {
 
     static async update(id, { winner, game_fk, player_fk }) {
         try {
-            const sqlQuery = "UPDATE game_player SET gamePlayer_winner = ? game_player = ?, player_fk = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+            const sqlQuery = "UPDATE game_player SET gamePlayer_winner = ?, game_fk = ?, player_fk = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
             const [result] = await connect.query(sqlQuery, [winner, game_fk, player_fk, id]);
 
             if (result.affectedRows === 0) return null;

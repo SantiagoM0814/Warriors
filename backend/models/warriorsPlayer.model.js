@@ -15,10 +15,10 @@ class WarriorsPlayerModel {
 
     static async show() {
         try {
-            const sqlQuery = "SELECT * FROM warriors_player ORDER BY id";
+            const sqlQuery = "CALL sp_show_warriorPlayer();";
             const [result] = await connect.query(sqlQuery);
 
-            return result;
+            return result[0];
         } catch (error) {
             console.log('Error in WarriorsPlayerModel.show:', error);
             throw error;
@@ -27,7 +27,7 @@ class WarriorsPlayerModel {
 
     static async update(id, { game_player_fk, warrior_fk }) {
         try {
-            const sqlQuery = "UPDATE warriors_player SET game_player_fk = ?, warrior_fk = ?, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+            const sqlQuery = "UPDATE warriors_player SET game_player_fk = ?, warrior_fk = ? WHERE id = ?";
             const [result] = await connect.query(sqlQuery, [game_player_fk, warrior_fk, id]);
 
             if (result.affectedRows === 0) return null;
